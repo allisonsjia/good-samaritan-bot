@@ -46,7 +46,7 @@ class EmergencyAssistanceLLM:
                   """
         )
         instructions =f"Bystander says: {bystander_transcript}\nRelevant context: {context}\n\n" \
-                 "Provide clear, step-by-step instructions for the dispatcher to relay to the bystander. Include any clarifying questions that the dispatcher should ask the bystander to better inform response." \
+                 "Use the context to provide clear, step-by-step instructions for the dispatcher to relay to the bystander and generate any clarifying questions that the dispatcher should ask the bystander to better inform response." \
                  "Inform the dispatcher whether the priority is high, medium, or low. Deliver the result in a JSON blob where 'Priority' maps to the priority, 'Message' maps to the message for the bystander without questions, and 'Questions' maps to the questions you have."
         response = self.client.chat.completions.create(
             model="gpt-3.5-turbo",  # Adjust to "gpt-4" if needed
@@ -58,7 +58,7 @@ class EmergencyAssistanceLLM:
         )
         return response.choices[0].message.content
 
-pinecone_api_key = ""
-open_ai_api_key = ""
-assistant = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
-print(assistant.generate_response("I am seeing someone unconscious on the ground, bleeding profusely from the head."))
+# pinecone_api_key = ""
+# open_ai_api_key = ""
+# assistant = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
+# print(assistant.generate_response("I am seeing someone unconscious on the ground, bleeding profusely from the head."))

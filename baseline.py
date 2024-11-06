@@ -1,3 +1,4 @@
+import openai
 from openai import OpenAI
 
 class BaselineLLM:
@@ -47,7 +48,7 @@ class BaselineLLM:
         )
         return response.choices[0].message.content
 
-open_ai_api_key = ""
-assistant = BaselineLLM(open_ai_api_key)
-print(assistant.generate_baseline_response("I am seeing someone unconscious on the ground, bleeding profusely from the head.")) 
-print(assistant.generate_detailed_baseline_response("I am seeing someone unconscious on the ground, bleeding profusely from the head."))
+# open_ai_api_key = ""
+# assistant = BaselineLLM(open_ai_api_key)
+# print(assistant.generate_baseline_response("I am seeing someone unconscious on the ground, bleeding profusely from the head.")) 
+# print(assistant.generate_detailed_baseline_response("I am seeing someone unconscious on the ground, bleeding profusely from the head."))
