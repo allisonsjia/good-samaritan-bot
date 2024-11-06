@@ -50,7 +50,7 @@ class RAGQueryModule:
             if index_name in best_index:
                 best_index = index_name
                 break
-            
+
         print(f"Determined index name: {best_index}")
 
         # Validate that the returned index is in the candidate list
@@ -94,8 +94,8 @@ class RAGQueryModule:
         #     print(f"Instructions: {match['metadata']['instructions']}\n")
 
 
-# pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
-# open_ai_api_key = "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"
+# pinecone_api_key = "INSERT"
+# open_ai_api_key = "INSERT"
 # rag_query_module = RAGQueryModule(pinecone_api_key=pinecone_api_key, open_ai_api_key=open_ai_api_key)
 
 # query_text = "I feel lightheaded and my head hurts."
