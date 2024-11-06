@@ -47,7 +47,7 @@ class BaselineLLM:
         )
         return response.choices[0].message.content
 
-open_ai_api_key = "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"
+open_ai_api_key = ""
 assistant = BaselineLLM(open_ai_api_key)
 print(assistant.generate_baseline_response("I am seeing someone unconscious on the ground, bleeding profusely from the head.")) 
 print(assistant.generate_detailed_baseline_response("I am seeing someone unconscious on the ground, bleeding profusely from the head."))

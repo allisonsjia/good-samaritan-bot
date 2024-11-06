@@ -58,7 +58,7 @@ class EmergencyAssistanceLLM:
         )
         return response.choices[0].message.content
 
-pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
-open_ai_api_key = "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"
+pinecone_api_key = ""
+open_ai_api_key = ""
 assistant = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
 print(assistant.generate_response("I am seeing someone unconscious on the ground, bleeding profusely from the head."))
