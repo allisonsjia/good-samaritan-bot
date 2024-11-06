@@ -51,7 +51,7 @@ class RAGQueryModule:
                 best_index = index_name
                 break
 
-        print(f"Determined index name: {best_index}")
+        # print(f"Determined index name: {best_index}")
 
         # Validate that the returned index is in the candidate list
         if best_index not in candidate_labels:
