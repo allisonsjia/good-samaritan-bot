@@ -30,9 +30,10 @@ class EmergencyAssistanceLLM:
         prompt_context_list = [f"For someone experiencing {match['metadata']['stimulus']}, you should {match['metadata']['instructions']}." for match in retrieved_context["matches"]]
         context = " ".join(prompt_context_list)
         # Generate a response using the LLM model with the bystander transcript and context
-        prompt = f"You ar a dispatcher assistant. You will receive what a bystander says about an emergency along with some context. Your goal is to provide instructions for what the dispatcher should tell the bystander."
+        prompt = f"You are a dispatcher assistant. You will receive what a bystander says about an emergency along with some context. Your goal is to provide instructions for what the dispatcher should tell the bystander."
         instructions =f"Bystander says: {bystander_transcript}\nRelevant context: {context}\n\n" \
-                 "Provide clear, step-by-step instructions for the dispatcher to relay to the bystander. Include any clarifying questions that the dispatcher should ask the bystander to better inform response. Inform the dispatcher whether the priority is high, medium, or low."
+                 "Provide clear, step-by-step instructions for the dispatcher to relay to the bystander. Include any clarifying questions that the dispatcher should ask the bystander to better inform response." \
+                 "Inform the dispatcher whether the priority is high, medium, or low. Deliver the result in a JSON blob where 'Priority' maps to the priority, 'Message' maps to the message for the bystander without questions, and 'Questions' maps to the questions you have."
         response = self.client.chat.completions.create(
             model="gpt-3.5-turbo",  # Adjust to "gpt-4" if needed
             messages=[
@@ -43,7 +44,7 @@ class EmergencyAssistanceLLM:
         )
         return response.choices[0].message.content
 
-pinecone_api_key = "INSERT"
-open_ai_api_key = "INSERT"
+pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
+open_ai_api_key = "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"
 assistant = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
 print(assistant.generate_response("I am seeing someone unconscious on the ground, bleeding profusely from the head."))
