@@ -106,7 +106,7 @@ class DispatcherApp:
     #             print(f"Emergency Assistance LLM: {llm_message}\n\n Simple Baseline: {simple_baseline} \n\n Detailed Baseline: {detailed_baseline}")
     #         print("\n")
 
-pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
-open_ai_api_key = "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"
+pinecone_api_key = ""
+open_ai_api_key = ""
 app = DispatcherApp(pinecone_api_key, open_ai_api_key)
 app.run()
