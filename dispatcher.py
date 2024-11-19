@@ -12,6 +12,8 @@ class DispatcherApp:
         self.llm_app = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
     
     def postprocess_response(self, response_jsonified):
+        if "{" not in response_jsonified:
+            return response_jsonified
         first_bracket = response_jsonified.find("{")
         second_bracket = response_jsonified.rfind("}")
         response_json = json.loads(response_jsonified[first_bracket:second_bracket + 1])
