@@ -1,0 +1,107 @@
+/* General styles for full-screen display */
+body {
+    font-family: "Courier New", Courier, monospace; /* Console-style font */
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e1e; /* Dark background */
+    color: #ffffff; /* Default text color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Full-screen chat container */
+.chat-container {
+    width: 100%;
+    max-width: 600px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #2d2d2d; /* Slightly lighter for contrast */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Chat window for displaying messages */
+#chat-window {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between messages */
+    scrollbar-width: thin;
+    scrollbar-color: #444 #2d2d2d;
+}
+
+/* Custom scrollbar */
+#chat-window::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-window::-webkit-scrollbar-thumb {
+    background-color: #444;
+    border-radius: 4px;
+}
+
+#chat-window::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* Message bubbles */
+.message {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    word-wrap: break-word;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.message.user {
+    align-self: flex-end;
+    background-color: #ff4c4c; /* Red for user */
+    color: #fff;
+    text-align: left;
+}
+
+.message.dispatcher {
+    align-self: flex-start;
+    background-color: #4caf50; /* Green for dispatcher */
+    color: #fff;
+    text-align: left;
+}
+
+/* Form for user input */
+#message-form {
+    display: flex;
+    padding: 10px;
+    background-color: #1e1e1e;
+    border-top: 1px solid #444;
+}
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    font-size: 16px;
+    color: #fff;
+    background-color: #444; /* Console-style input */
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: #2196f3; /* Blue for send button */
+    color: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #1e88e5; /* Lighter blue on hover */
+}

@@ -1,49 +1,24 @@
-from llm_module import EmergencyAssistanceLLM
-import json
+from flask import Flask, jsonify, render_template, request
+from dispatcher import DispatcherApp  # Import the dispatcher response function
 
-class DispatcherApp:
-    def __init__(self, pinecone_api_key, open_ai_api_key):
-        """
-        Initializes the chat app
-        Parameters: 
-        - pinecone_api_key - API Key for Pinecone
-        - open_ai_api_key - API Key for OpenAI
-        """
-        self.llm_app = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
-    
-    def postprocess_response(self, response_jsonified):
-        first_bracket = response_jsonified.find("{")
-        second_bracket = response_jsonified.rfind("}")
-        response_json = json.loads(response_jsonified[first_bracket:second_bracket + 1])
-        all_questions = " ".join(response_json["Questions"])
-        message = response_json["Message"] + all_questions
-        return message
-    
-    def query_app(self, bystander_transcript):
-        """
-        Parameters:
-        - bystander_transcript: The transcript of what the bystander says on the phone.
-        
-        Returns:
-        - response: A response to guide the dispatcher.
-        """
-        response = self.llm_app.generate_response(bystander_transcript)
-        message = self.postprocess_response(response)
-        self.llm_app.state.append((bystander_transcript, message))
-        return message
-    
-    def run(self):
-        while True:
-            user_input = input("Updates for Dispatcher: ")
-            if user_input.lower() == 'exit':
-                print("Help is on the way! Stay calm.")
-                break  # Exits the loop
-            else:
-                response = self.query_app(user_input)
-                print(response)
-            print("\n")
+app = Flask(__name__, static_folder='static')
+DISPATCHER = DispatcherApp("7623f706-02e2-427e-8e10-c1b77db64b56", 
+    "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")
 
-pinecone_api_key = ""
-open_ai_api_key = ""
-app = DispatcherApp(pinecone_api_key, open_ai_api_key)
-app.run()
+@app.route('/')
+def index():
+    """Render the main chat interface."""
+    return render_template('index.html')
+
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    """Handle user messages and return a dispatcher response."""
+    user_message = request.json.get("message")
+    if not user_message:
+        return jsonify({"error": "No message provided"}), 400
+    # Get a response from the dispatcher assistant
+    dispatcher_response = DISPATCHER.query_app(user_message)
+    return jsonify({"user_message": user_message, "dispatcher_response": dispatcher_response})
+
+if __name__ == '__main__':
+    app.run(debug=True)
