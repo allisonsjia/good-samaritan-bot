@@ -41,7 +41,8 @@ class RAGQueryModule:
                 {"role": "user", "content": f"Given the following query, decide which category it best fits: Query: \"{query_text}\". Respond only with the best category name."}
             ],
             max_tokens=20,
-            temperature=0  # Lower temperature for more deterministic output
+            temperature=0,  # Lower temperature for more deterministic output,
+            top_p = 1
         )
 
         # Extract the best index name from the response

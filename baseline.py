@@ -16,7 +16,7 @@ class BaselineLLM:
                 {"role": "system", "content": prompt},
                 {"role": "user", "content": instructions}
             ],
-            temperature=0  # Lower temperature for more deterministic output
+            temperature=0,
         )
         return response.choices[0].message.content
     
@@ -44,7 +44,7 @@ class BaselineLLM:
                 {"role": "system", "content": detailed_prompt},
                 {"role": "user", "content": instructions}
             ],
-            temperature=0  # Lower temperature for more deterministic output
+            temperature=0,
         )
         return response.choices[0].message.content
 

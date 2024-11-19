@@ -54,11 +54,11 @@ class EmergencyAssistanceLLM:
                 {"role": "system", "content": detailed_prompt},
                 {"role": "user", "content": instructions}
             ],
-            temperature=0  # Lower temperature for more deterministic output
+            temperature=0,  # Lower temperature for more deterministic output
         )
         return response.choices[0].message.content
 
-# pinecone_api_key = ""
-# open_ai_api_key = ""
+# pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
+# open_ai_api_key = "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"
 # assistant = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
 # print(assistant.generate_response("I am seeing someone unconscious on the ground, bleeding profusely from the head."))

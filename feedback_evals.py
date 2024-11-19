@@ -27,7 +27,6 @@ class Feedback_Evals:
     def generate_responses(self, transcript):
         # Generate responses from LLM and Baseline modules
         llm_response_text = self.llm_module.generate_response(transcript)
-        print(llm_response_text)
         baseline_response_text = self.baseline_module.generate_baseline_response(transcript)
         detailed_baseline_response_text = self.baseline_module.generate_detailed_baseline_response(transcript)
         return llm_response_text, baseline_response_text, detailed_baseline_response_text
@@ -35,7 +34,7 @@ class Feedback_Evals:
     def evaluate_response(self, context, transcript, response_text):
         # Evaluate a single response based on groundedness, answer relevance, and context relevance
         context = self.get_context(transcript)
-        f_groundedness = self.provider.groundedness_measure_with_cot_reasons(context, response_text)
+        f_groundedness = self.provider.groundedness_measure_with_cot_reasons_consider_answerability(context, response_text, question=f"What should be done in the following situation + {transcript}?")
         f_answer_relevance = self.provider.relevance_with_cot_reasons(transcript, response_text)
         f_context_relevance = self.provider.context_relevance_with_cot_reasons(transcript, context)
         
@@ -53,10 +52,10 @@ class Feedback_Evals:
         for metric, (score, details) in scores.items():
             if metric == "Groundedness":
                 formatted_output.append(f"  {metric} Score: {score:.2f}\n    Details: {details['reasons']}\n")
-            elif metric == "Answer Relevance":
-                formatted_output.append(f"  {metric} Score: {score:.2f}\n    Explanation: {details['reason']}\n")
-            elif metric == "Context Relevance":
-                formatted_output.append(f"  {metric} Score: {score:.2f}\n    Explanation: {details['reason']}\n")
+            # elif metric == "Answer Relevance":
+            #     formatted_output.append(f"  {metric} Score: {score:.2f}\n    Explanation: {details['reason']}\n")
+            # elif metric == "Context Relevance":
+            #     formatted_output.append(f"  {metric} Score: {score:.2f}\n    Explanation: {details['reason']}\n")
         
         return "\n".join(formatted_output)
 
@@ -88,8 +87,8 @@ class Feedback_Evals:
         print(self.format_scores(detailed_baseline_scores))
 
 
-pinecone_api_key = ""
-open_ai_api_key = ""
+pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
+open_ai_api_key = "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"
 evaluator = Feedback_Evals(pinecone_api_key, open_ai_api_key)
 transcript = "I am seeing someone unconscious on the ground, bleeding profusely from the head."
 results = evaluator.evaluate(transcript)
