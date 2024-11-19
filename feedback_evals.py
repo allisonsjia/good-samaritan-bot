@@ -87,8 +87,8 @@ class Feedback_Evals:
         print(self.format_scores(detailed_baseline_scores))
 
 
-pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
-open_ai_api_key = "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"
+pinecone_api_key = ""
+open_ai_api_key = ""
 evaluator = Feedback_Evals(pinecone_api_key, open_ai_api_key)
 transcript = "I am seeing someone unconscious on the ground, bleeding profusely from the head."
 results = evaluator.evaluate(transcript)
