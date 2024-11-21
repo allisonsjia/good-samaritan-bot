@@ -35,7 +35,7 @@ class RAGQueryModule:
 
         # Call the OpenAI API to classify the query
         response = self.client.chat.completions.create(
-            model="gpt-4o-mini",  # Adjust to "gpt-4" if needed
+            model="gpt-3.5-turbo",  # Adjust to "gpt-4" if needed
             messages=[
                 {"role": "system", "content": detailed_prompt},
                 {"role": "user", "content": f"Given the following query, decide which category it best fits: Query: \"{query_text}\". Respond only with the best category name."}
@@ -94,9 +94,13 @@ class RAGQueryModule:
         #     print(f"Instructions: {match['metadata']['instructions']}\n")
 
 
-# pinecone_api_key = "INSERT"
-# open_ai_api_key = "INSERT"
+# pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
+# open_ai_api_key = "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"
 # rag_query_module = RAGQueryModule(pinecone_api_key=pinecone_api_key, open_ai_api_key=open_ai_api_key)
 
-# query_text = "I feel lightheaded and my head hurts."
+# query_text = "I came across someone who was stung by a jellyfish."
 # results = rag_query_module.query_index_by_text(query_text)
+# for match in results["matches"]:
+#     print(f"Score: {match['score']}")
+#     print(f"Stimulus: {match['metadata']['stimulus']}")
+#     print(f"Instructions: {match['metadata']['instructions']}\n")

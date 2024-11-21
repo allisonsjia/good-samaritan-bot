@@ -113,7 +113,7 @@ class EmergencyAssistanceLLM:
         )
         return response.choices[0].message.content
 
-# pinecone_api_key = ""
-# open_ai_api_key = ""
+# pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
+# open_ai_api_key = "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"
 # assistant = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
-# print(assistant.generate_response("I am seeing someone unconscious on the ground, bleeding profusely from the head."))
+# print(assistant.generate_response("I came across someone with a jellyfish sting."))

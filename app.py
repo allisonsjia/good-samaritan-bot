@@ -1,9 +1,14 @@
 from flask import Flask, jsonify, render_template, request
 from dispatcher import DispatcherApp  # Import the dispatcher response function
+import nltk
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
+nltk.download('punkt_tab')
 
 app = Flask(__name__, static_folder='static')
 DISPATCHER = DispatcherApp("7623f706-02e2-427e-8e10-c1b77db64b56", 
-    "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")
+    "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")
 
 @app.route('/')
 def index():
