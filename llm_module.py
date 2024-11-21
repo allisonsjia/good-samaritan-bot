@@ -37,7 +37,7 @@ class EmergencyAssistanceLLM:
         reasons from drug overdose to seizure. You should not make assumptions about what is causing the person's condition unless you have high confidence. 
         Please provide your rationale for your confidence. 
         """
-        # print(instructions)
+        print(prompt_context_list)
         print("\n")
         response = self.client.chat.completions.create(
             model="gpt-4o-mini",  # Adjust to "gpt-4" if needed
@@ -70,8 +70,15 @@ class EmergencyAssistanceLLM:
         Returns:
         - response: A response to guide the dispatcher.
         """
-        complete_history = self.get_complete_history(bystander_transcript)
+        if not self.state:
+            complete_history = bystander_transcript
+        else:
+            complete_history = self.get_complete_history(bystander_transcript)
         retrieved_context = self.rag_module.query_index_by_text(complete_history)
+        for match in retrieved_context["matches"]:
+            print(f"Score: {match['score']}")
+            print(f"Stimulus: {match['metadata']['stimulus']}")
+            print(f"Instructions: {match['metadata']['instructions']}\n")
         prompt_context_list = [f"For someone experiencing {match['metadata']['stimulus']}, you should {match['metadata']['instructions']}." for match in retrieved_context["matches"]]
         proceed, context = self.determine_context_applicability(complete_history, prompt_context_list)
         if not proceed:
@@ -113,7 +120,7 @@ class EmergencyAssistanceLLM:
         )
         return response.choices[0].message.content
 
-# pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
-# open_ai_api_key = "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"
-# assistant = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
-# print(assistant.generate_response("I came across someone with a jellyfish sting."))
+pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
+open_ai_api_key = "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"
+assistant = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
+print(assistant.generate_response("I think I got stung by a jellyfish while swimming in the ocean."))
