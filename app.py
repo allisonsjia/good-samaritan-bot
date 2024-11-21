@@ -3,7 +3,7 @@ from dispatcher import DispatcherApp  # Import the dispatcher response function
 
 app = Flask(__name__, static_folder='static')
 DISPATCHER = DispatcherApp("7623f706-02e2-427e-8e10-c1b77db64b56", 
-    "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")
+    "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")
 
 @app.route('/')
 def index():
