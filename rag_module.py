@@ -35,7 +35,7 @@ class RAGQueryModule:
 
         # Call the OpenAI API to classify the query
         response = self.client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Adjust to "gpt-4" if needed
+            model="gpt-4o-mini",  # Adjust to "gpt-4" if needed
             messages=[
                 {"role": "system", "content": detailed_prompt},
                 {"role": "user", "content": f"Given the following query, decide which category it best fits: Query: \"{query_text}\". Respond only with the best category name."}

@@ -11,7 +11,7 @@ class BaselineLLM:
                  "Provide clear, step-by-step instructions for the dispatcher to relay to the bystander. Include any clarifying questions that the dispatcher should ask the bystander to better inform response." \
                  "Inform the dispatcher whether the priority is high, medium, or low. Deliver the result in a JSON blob where 'Priority' maps to the priority, 'Message' maps to the message for the bystander without questions, and 'Questions' maps to the questions you have."
         response = self.client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Adjust to "gpt-4" if needed
+            model="gpt-4o-mini",  # Adjust to "gpt-4" if needed
             messages=[
                 {"role": "system", "content": prompt},
                 {"role": "user", "content": instructions}
@@ -39,7 +39,7 @@ class BaselineLLM:
                  "Provide clear, step-by-step instructions for the dispatcher to relay to the bystander. Include any clarifying questions that the dispatcher should ask the bystander to better inform response." \
                  "Inform the dispatcher whether the priority is high, medium, or low. Deliver the result in a JSON blob where 'Priority' maps to the priority, 'Message' maps to the message for the bystander without questions, and 'Questions' maps to the questions you have."
         response = self.client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Adjust to "gpt-4" if needed
+            model="gpt-4o-mini",  # Adjust to "gpt-4" if needed
             messages=[
                 {"role": "system", "content": detailed_prompt},
                 {"role": "user", "content": instructions}
