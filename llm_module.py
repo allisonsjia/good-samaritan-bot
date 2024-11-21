@@ -37,7 +37,7 @@ class EmergencyAssistanceLLM:
         reasons from drug overdose to seizure. You should not make assumptions about what is causing the person's condition unless you have high confidence. 
         Please provide your rationale for your confidence. 
         """
-        print(instructions)
+        # print(instructions)
         print("\n")
         response = self.client.chat.completions.create(
             model="gpt-4o-mini",  # Adjust to "gpt-4" if needed
