@@ -19,7 +19,8 @@ class EmergencyAssistanceLLM:
     def get_complete_history(self, bystander_transcript):
         past_updates = [state for state, _ in self.state]
         history =  " ".join(past_updates)
-        return f"My most recent update is that: {bystander_transcript}. My past updates were: {history}"
+        # return f"My most recent update is that: {bystander_transcript}. My past updates were: {history}"
+        return f"{history}. {bystander_transcript}."
     
     def determine_context_applicability(self, complete_history, prompt_context_list):
         detailed_prompt = """
@@ -37,7 +38,7 @@ class EmergencyAssistanceLLM:
         reasons from drug overdose to seizure. You should not make assumptions about what is causing the person's condition unless you have high confidence. 
         Please provide your rationale for your confidence. 
         """
-        print(prompt_context_list)
+        #print(f"complete_history: {complete_history}")
         print("\n")
         response = self.client.chat.completions.create(
             model="gpt-4o-mini",  # Adjust to "gpt-4" if needed
@@ -48,7 +49,7 @@ class EmergencyAssistanceLLM:
             temperature=0  # Lower temperature for more deterministic output
         )
         response_jsonified = response.choices[0].message.content
-        print(response_jsonified)
+        print(f"json_response: {response_jsonified} \n END JSON RESPONSE")
         first_bracket = response_jsonified.find("{")
         second_bracket = response_jsonified.rfind("}")
         response_json = json.loads(response_jsonified[first_bracket:second_bracket + 1])
@@ -75,12 +76,14 @@ class EmergencyAssistanceLLM:
         else:
             complete_history = self.get_complete_history(bystander_transcript)
         retrieved_context = self.rag_module.query_index_by_text(complete_history)
-        for match in retrieved_context["matches"]:
-            print(f"Score: {match['score']}")
-            print(f"Stimulus: {match['metadata']['stimulus']}")
-            print(f"Instructions: {match['metadata']['instructions']}\n")
+        # for match in retrieved_context["matches"]:
+        #     print(f"Score: {match['score']}")
+        #     print(f"Stimulus: {match['metadata']['stimulus']}")
+        #     print(f"Instructions: {match['metadata']['instructions']}\n")
         prompt_context_list = [f"For someone experiencing {match['metadata']['stimulus']}, you should {match['metadata']['instructions']}." for match in retrieved_context["matches"]]
+        # print(f"prompt_context_list: {prompt_context_list}")
         proceed, context = self.determine_context_applicability(complete_history, prompt_context_list)
+        # print(f"relevant context: {context}")
         if not proceed:
             if context == []:
                 return "Please tell the bystander to stay calm and wait for support. I have no medical advice to provide for the current situation. Do not encourage the bystander to perform tasks they are untrained for."
@@ -120,7 +123,7 @@ class EmergencyAssistanceLLM:
         )
         return response.choices[0].message.content
 
-pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
-open_ai_api_key = "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"
-assistant = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
-print(assistant.generate_response("I think I got stung by a jellyfish while swimming in the ocean."))
+# pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
+# open_ai_api_key = "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"
+# assistant = EmergencyAssistanceLLM(pinecone_api_key, open_ai_api_key)
+# print(assistant.generate_response("I think I got stung by a jellyfish while swimming in the ocean."))

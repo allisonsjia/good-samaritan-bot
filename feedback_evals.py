@@ -36,7 +36,6 @@ class Feedback_Evals:
     
     def evaluate_response(self, context, transcript, response_text):
         # Evaluate a single response based on groundedness, answer relevance, and context relevance
-        context = self.get_context(transcript)
         f_groundedness = self.provider.groundedness_measure_with_cot_reasons_consider_answerability(context, response_text, question=f"What should be done in the following situation?: {transcript}")
         f_answer_relevance = self.provider.relevance_with_cot_reasons(transcript, response_text)
         f_context_relevance = self.provider.context_relevance_with_cot_reasons(transcript, context)

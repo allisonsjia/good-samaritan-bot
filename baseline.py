@@ -14,7 +14,8 @@ class BaselineLLM:
         else:
             past_updates = [state for state, _ in self.detailed_state]
         history =  " ".join(past_updates)
-        return f"My most recent update is that: {bystander_transcript}. My past updates were: {history}"
+        #return f"My most recent update is that: {bystander_transcript}. My past updates were: {history}"
+        return f"{history}. {bystander_transcript}."
 
     # def postprocess_response(self, response_jsonified):
     #     first_bracket = response_jsonified.find("{")
@@ -26,7 +27,7 @@ class BaselineLLM:
     
     def generate_baseline_response(self, bystander_transcript):
         complete_history = self.get_complete_history(bystander_transcript, simple=True)
-        print(complete_history)
+        # print(complete_history)
         # Generate a response using the LLM model with the bystander transcript and context
         past_interactions = [f"In response to - {transcript} - the dispatcher said: {response}" for transcript, response in self.simple_state]
         history_prompt = f"I will provide a history of past interactions between the dispatcher and the bystander. You should make sure you are providing new and relevant insights to the dispatcher as you are updated. However, you should make sure you responses are taking into account all historical context and how new updates fit into what you already understand about the situation. Here is the history:" + " ".join(past_interactions)
@@ -49,7 +50,7 @@ class BaselineLLM:
     
     def generate_detailed_baseline_response(self, bystander_transcript):
         complete_history = self.get_complete_history(bystander_transcript, simple=False)
-        print(complete_history)
+        # print(complete_history)
         past_interactions = [f"In response to - {transcript} - the dispatcher said: {response}" for transcript, response in self.detailed_state]
         history_prompt = f"I will provide a history of past interactions between the dispatcher and the bystander. You should make sure you are providing new and relevant insights to the dispatcher as you are updated. However, you should make sure you responses are taking into account all historical context and how new updates fit into what you already understand about the situation. Here is the history:" + " ".join(past_interactions)
         detailed_prompt = (f"""
