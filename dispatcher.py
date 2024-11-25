@@ -25,7 +25,18 @@ class DispatcherApp:
         message = response_json["Message"] + all_questions
         return message
     
-    def query_app(self, bystander_transcript):
+    def postprocess_plan(self, response):
+        questions = response["Questions"]
+        next_steps = response["Next Steps"]
+        questions_str = " ".join(questions)
+        if not questions:
+            llm_message = f"At this point, I seem to have a good understanding of the situation. Please proceed with the following next steps: {next_steps}"
+        else:
+            llm_message = f"Here are some pertinent clarifying questions to ask: {questions_str} Contingent upon those answers, here are potential next steps: {next_steps}"
+        return llm_message
+
+    
+    def query_app(self, bystander_transcript, do_eval=True, with_planning=False):
         """
         Parameters:
         - bystander_transcript: The transcript of what the bystander says on the phone.
@@ -33,10 +44,14 @@ class DispatcherApp:
         Returns:
         - response: A response to guide the dispatcher.
         """
-        llm_response = self.llm_app.generate_response(bystander_transcript)
-        llm_message = self.postprocess_response(llm_response)
+        llm_response = self.llm_app.generate_response(bystander_transcript, with_planning)
+        if with_planning:
+            llm_message = self.postprocess_plan(llm_response)
+        else:
+            llm_message = self.postprocess_response(llm_response)
         self.llm_app.state.append((bystander_transcript, llm_message))
-
+        if not do_eval:
+            return llm_message
         simple_baseline_response = self.baseline_app.generate_baseline_response(bystander_transcript)
         simple_baseline_message = self.postprocess_response(simple_baseline_response)
         self.baseline_app.simple_state.append((bystander_transcript, simple_baseline_message))
