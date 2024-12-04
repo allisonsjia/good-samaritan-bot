@@ -36,7 +36,7 @@ class Feedback_Evals:
     
     def evaluate_response(self, context, transcript, response_text):
         # Evaluate a single response based on groundedness, answer relevance, and context relevance
-        f_groundedness = self.provider.groundedness_measure_with_cot_reasons_consider_answerability(context, response_text, question=f"What should be done in the following situation?: {transcript}")
+        f_groundedness = self.provider.groundedness_measure_with_cot_reasons_consider_answerability(context, response_text, question=f"How should an emergency medical dispatcher respond to the following situation?: {transcript}", use_sent_tokenize=False)
         f_answer_relevance = self.provider.relevance_with_cot_reasons(transcript, response_text)
         f_context_relevance = self.provider.context_relevance_with_cot_reasons(transcript, context)
         
@@ -51,21 +51,6 @@ class Feedback_Evals:
         post_hoc_context = self.get_context(response_text)
         return self.evaluate_response(post_hoc_context, transcript, response_text)
 
-    
-    # def format_scores(self, scores):
-    #     # Helper function to format scores into a readable structure
-    #     formatted_output = []
-    
-    #         # Format each score
-    #     for metric, (score, details) in scores.items():
-    #         if metric == "Groundedness":
-    #             formatted_output.append(f"  {metric} Score: {score:.2f}\n    Details: {details['reasons']}\n")
-    #         elif metric == "Answer Relevance":
-    #             formatted_output.append(f"  {metric} Score: {score:.2f}\n    Explanation: {details['reason']}\n")
-    #         elif metric == "Context Relevance":
-    #             formatted_output.append(f"  {metric} Score: {score:.2f}\n    Explanation: {details['reason']}\n")
-        
-    #     return "\n".join(formatted_output)
     def format_scores(self, scores):
         """Format scores for display."""
         formatted_output = []
@@ -97,51 +82,3 @@ class Feedback_Evals:
         except Exception as e:
             print(f"Error loading evaluation log: {e}")
             self.evaluation_log = []
-    
-
-    # def evaluate(self, transcript):
-    #     # Main method to evaluate responses from both LLM and Baseline modules
-    #     llm_context = self.get_context(transcript)
-    #     llm_response_text, baseline_response_text, detailed_baseline_response_text = self.generate_responses(transcript)
-        
-    #     # Evaluate both responses
-    #     llm_scores = self.evaluate_response(llm_context, transcript, llm_response_text)
-    #     # post-hoc evaluation of baseline
-    #     baseline_scores = self.evaluate_post_hoc_grounding(transcript, baseline_response_text)
-    #     detailed_baseline_scores = self.evaluate_post_hoc_grounding(transcript, detailed_baseline_response_text)
-        
-    #     self.evaluation_log.append({
-    #         "transcript": transcript,
-    #         "llm_context": llm_context,
-
-    #         "llm_response": llm_response_text,
-    #         "baseline_response": baseline_response_text,
-    #         "detailed_baseline_response": detailed_baseline_response_text,
-    #         "llm_scores": llm_scores,
-    #         "baseline_scores": baseline_scores,
-    #         "detailed_baseline_scores": detailed_baseline_scores
-    #     })
-
-        # Return a summary of results
-        # Print formatted results
-        # print(llm_context)
-        # print("LLM Answer:")
-        # print(llm_response_text)
-        # print("LLM Module Scores:")
-        # print(self.format_scores(llm_scores))
-        # print("Baseline Answer:")
-        # print(baseline_response_text)
-        # print("\nBaseline Module Scores:")
-        # print(self.format_scores(baseline_scores))
-        # print("Detailed Baseline Answer:")
-        # print(detailed_baseline_response_text)
-        # print("\nDetailed Baseline Module Scores:")
-        # print(self.format_scores(detailed_baseline_scores))
-
-
-# pinecone_api_key = ""
-# open_ai_api_key = ""
-# evaluator = Feedback_Evals(pinecone_api_key, open_ai_api_key)
-# transcript = "I am seeing someone unconscious on the ground, bleeding profusely from the head."
-# results = evaluator.evaluate(transcript)
-# print(results)

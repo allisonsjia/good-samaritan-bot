@@ -1,6 +1,7 @@
 from pinecone import Pinecone
 import openai
 from openai import OpenAI
+from trulens.apps.custom import instrument
 
 INDEX_NAMES = [
     'airway-breathing',
@@ -20,6 +21,7 @@ class RAGQueryModule:
         self.client = OpenAI(api_key=open_ai_api_key)
     
         # Function to determine the index name using OpenAI LLM
+    @instrument
     def get_index_name_from_query(self, query_text, candidate_labels=INDEX_NAMES):
         # Create a prompt to help classify the query text
         detailed_prompt = f"""
@@ -31,6 +33,7 @@ class RAGQueryModule:
         - The 'scene-management' category includes information about steps of emergency scene management, scene survey, primary survey, secondary survey, ongoing casualty care, multiple casualty management (triage), lifting and moving, and extrication.
         - The 'wounds-bandages' category includes information about dressings, bandages, and slings, types of wounds, bleeding, internal bleeding, amputations, minor wound care, first aid for hand and foot injuries, chest injuries, abdominal injuries, crush injuries, scalp injuries, facial injuries, eye injuries, burns, bites, and stings.
         - The 'basic-life-support' category includes information about age categories for resuscitation, artificial respiration, cardiopulmonary resuscitation (CPR), and quick first aid reference.
+        You must respond only with the name of the category.
         """
 
         # Call the OpenAI API to classify the query
@@ -38,7 +41,7 @@ class RAGQueryModule:
             model="gpt-3.5-turbo",  # Adjust to "gpt-4" if needed
             messages=[
                 {"role": "system", "content": detailed_prompt},
-                {"role": "user", "content": f"Given the following query, decide which category it best fits: Query: \"{query_text}\". Respond only with the best category name."}
+                {"role": "user", "content": f"Given the following query, \"{query_text}\", decide which category best fits. Return only the best category name from the 7 possible categories: airway-breathing, bone-joint, cardiovascular-cpr, other-emergencies, scene-management, wounds-bandages, and basic-life-support."}
             ],
             max_tokens=20,
             temperature=0  # Lower temperature for more deterministic output
@@ -51,7 +54,7 @@ class RAGQueryModule:
                 best_index = index_name
                 break
 
-        # print(f"Determined index name: {best_index}")
+        #print(f"Determined index name: {best_index}")
 
         # Validate that the returned index is in the candidate list
         if best_index not in candidate_labels:
@@ -60,6 +63,7 @@ class RAGQueryModule:
         return best_index
     
         # Function to query Pinecone based on the determined index name
+    @instrument
     def query_index_by_text(self, query_text):
         # Get the relevant index name using the LLM function
         index_name = self.get_index_name_from_query(query_text)
@@ -79,7 +83,7 @@ class RAGQueryModule:
         results = index.query(
             namespace=f"{index_name}-namespace",
             vector=query_embedding[0].values,
-            top_k=3,
+            top_k=5,
             include_values=False,
             include_metadata=True
         )
@@ -94,11 +98,11 @@ class RAGQueryModule:
         #     print(f"Instructions: {match['metadata']['instructions']}\n")
 
 
-# pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
-# open_ai_api_key = "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"
+# pinecone_api_key = ""
+# open_ai_api_key = ""
 # rag_query_module = RAGQueryModule(pinecone_api_key=pinecone_api_key, open_ai_api_key=open_ai_api_key)
 
-# query_text = "I came across someone who was stung by a jellyfish."
+# query_text = "Please ensure your safety first. If you can do so safely, approach the person and check if they are conscious and responsive. If they are awake, calmly ask them their name and what happened. Apply gentle pressure to the bleeding area with a clean cloth or your hand to help control the bleeding. If the bleeding does not stop or if they become unresponsive, call for emergency services immediately. Do not move them unless there is an immediate danger. Stay with them and provide reassurance until help arrives.Is the person conscious and able to respond? Can you see the source of the bleeding clearly? Is there any visible danger in the area, such as broken glass or other hazards? Are there any other people around who can assist you? What is the person's approximate age and gender?"
 # results = rag_query_module.query_index_by_text(query_text)
 # for match in results["matches"]:
 #     print(f"Score: {match['score']}")
