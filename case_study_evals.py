@@ -14,8 +14,8 @@ from baseline import BaselineLLM
 session = TruSession()
 session.reset_database()
 
-pinecone_api_key = "7623f706-02e2-427e-8e10-c1b77db64b56"
-open_ai_api_key = "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"
+pinecone_api_key = ""
+open_ai_api_key = ""
 
 
 csv_path = "case_studies.csv"
